@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html data-page-node-id="x3tNCBGqN94cZKzCM7101w" lang="en">
+<head data-page-node-id="5j9i95yqqwy3JPxj58Ddda">
+<script data-page-node-id="pigBfJ6RsLteYkW1J69Dft" src="/page/page_comm/inject.js"></script>
+<meta data-page-node-id="M1vFRouLa8LcD9c1f2iQ5K" charset="UTF-8">
+<meta data-page-node-id="lvjFvJ6IhnKE6BEfJYiGR9" content="width=device-width, initial-scale=1.0" name="viewport">
+<title data-page-node-id="y5Ifejt8xrBa61uAAd2Inu" data-pnid-children="YJKMNOyirz9F8QkLeGqXEK">CÉLESTE — Eau de Parfum</title>
+<link data-page-node-id="whwdYy64aOZ7kOqtCzNXV3" href="https://fonts.googleapis.com" rel="preconnect">
+<link data-page-node-id="7b2dSIgx1tp9jFUKVfYT1e" crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link data-page-node-id="HcYO3Pr3FxNyJT3h7DnAS9" crossorigin href="https://cdn.jsdelivr.net" rel="preconnect">
+<link data-page-node-id="btFYCa0CUWcV4z3k1dKvZi" as="fetch" crossorigin href="model-web.glb" rel="preload">
+<link data-page-node-id="GX40DKlml0mKeubIfWCnzs" as="fetch" crossorigin href="apple-web.glb" rel="preload">
+<link data-page-node-id="uudNgRLPuuPFqEHQrjFISL" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style data-page-node-id="mm2HBOSfsEG4dhUv0eFjaJ" data-pnid-children="cMZDc9cFb5qxBRwrV6RAhw">
+:root{
+  --sky:#aecde8; --sky-deep:#7fadd4; --cloud:#f5f7f9; --ink:#18222e;
+  --amber:#c14a24; --amber-glow:#e06a3a;
+  --serif:'Instrument Serif',serif; --sans:'Inter',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{color:var(--ink);font-family:var(--sans);font-weight:300;overflow-x:hidden;cursor:none;
+  background:url('beach.jpg') center/cover fixed no-repeat #dfeefb}
+/* blurred twin of the beach — fades in with scroll (defocus) */
+.bg-blur{position:fixed;inset:-30px;z-index:0;pointer-events:none;opacity:0;
+  background:url('beach.jpg') center/cover no-repeat;filter:blur(18px) saturate(1.15) brightness(1.03)}
+.blobs-wrap{display:none}
+::selection{background:var(--amber);color:#fff}
+
+/* dreamy drifting blobs */
+.blob{position:fixed;border-radius:50%;filter:blur(90px);z-index:0;pointer-events:none;opacity:.55}
+.blob.b1{width:55vmax;height:55vmax;background:#bcd9f2;top:-18vmax;left:-12vmax;animation:drift1 26s ease-in-out infinite}
+.blob.b2{width:44vmax;height:44vmax;background:#fdfdfb;bottom:-14vmax;right:-8vmax;animation:drift2 31s ease-in-out infinite}
+.blob.b3{width:30vmax;height:30vmax;background:#f3d9cd;bottom:8vmax;left:20vmax;opacity:.3;animation:drift1 37s ease-in-out infinite reverse}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(7vmax,5vmax) scale(1.12)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1.05)}50%{transform:translate(-6vmax,-4vmax) scale(.94)}}
+
+.grain{position:fixed;inset:-50%;width:200%;height:200%;z-index:90;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 8s steps(10) infinite}
+@keyframes grain{0%,100%{transform:translate(0,0)}20%{transform:translate(-2%,3%)}40%{transform:translate(3%,-2%)}60%{transform:translate(-3%,-3%)}80%{transform:translate(2%,2%)}}
+
+.cursor,.cursor-dot{position:fixed;top:0;left:0;pointer-events:none;z-index:200;border-radius:50%;transform:translate(-50%,-50%)}
+.cursor{width:36px;height:36px;border:1px solid rgba(24,34,46,.35);transition:width .3s,height .3s,border-color .3s,background .3s}
+.cursor-dot{width:5px;height:5px;background:var(--amber)}
+.cursor.hovering{width:64px;height:64px;border-color:var(--amber);background:rgba(193,74,36,.06)}
+@media(hover:none){.cursor,.cursor-dot{display:none}body{cursor:auto}}
+
+#stage,#stage-bg{position:fixed;inset:0}
+#stage-bg{z-index:1}
+#stage{z-index:2}
+.vignette{position:fixed;inset:0;z-index:3;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 110%,rgba(174,205,232,.3),transparent 60%)}
+
+#loader{position:fixed;inset:0;z-index:100;background:var(--cloud);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .8s,visibility .8s}
+#loader.done{opacity:0;visibility:hidden}
+#loader .word{font-family:var(--serif);font-style:italic;font-size:clamp(28px,4vw,44px);letter-spacing:.04em}
+#loader .bar{width:min(220px,50vw);height:1px;background:rgba(24,34,46,.15);overflow:hidden}
+#loader .bar i{display:block;height:100%;width:0;background:var(--amber);transition:width .3s}
+#loader .pct{font-size:11px;letter-spacing:.3em;color:rgba(24,34,46,.5)}
+
+main{position:relative;z-index:10}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:28px clamp(20px,5vw,64px)}
+.logo{font-family:var(--serif);font-size:22px;letter-spacing:.08em}
+.logo em{color:var(--amber)}
+.nav-links{display:flex;gap:32px}
+.nav-links a{font-size:11px;letter-spacing:.28em;text-transform:uppercase;text-decoration:none;color:var(--ink);position:relative;padding:4px 0}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--amber);transition:width .4s cubic-bezier(.22,1,.36,1)}
+.nav-links a:hover::after{width:100%}
+@media(max-width:640px){.nav-links{display:none}}
+
+section{min-height:100vh;display:flex;align-items:center;padding:0 clamp(20px,6vw,80px);position:relative}
+.copy{max-width:520px;pointer-events:none}
+.copy a,.copy button,.copy .note{pointer-events:auto}
+section[data-side="right"]{justify-content:flex-end}
+.kicker{font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.kicker::before{content:'';width:34px;height:1px;background:var(--amber)}
+h1,h2{font-family:var(--serif);font-weight:400;line-height:1.02;letter-spacing:.01em}
+h1{font-size:clamp(52px,9vw,124px)}
+h2{font-size:clamp(40px,6vw,80px)}
+h1 em,h2 em{font-style:italic;color:var(--sky-deep)}
+.lede{margin-top:26px;font-size:clamp(15px,1.3vw,17px);line-height:1.8;color:rgba(24,34,46,.72);max-width:44ch}
+
+/* CTA — amber, elevation, glow */
+.btn{display:inline-flex;align-items:center;gap:12px;margin-top:38px;padding:17px 36px;border:none;border-radius:100px;
+  background:linear-gradient(135deg,var(--amber-glow),var(--amber));color:#fff;
+  font-family:var(--sans);font-size:11px;letter-spacing:.28em;text-transform:uppercase;cursor:none;
+  box-shadow:0 8px 24px -8px rgba(193,74,36,.55);
+  transition:transform .45s cubic-bezier(.22,1,.36,1),box-shadow .45s}
+.btn:hover{transform:translateY(-4px);box-shadow:0 20px 44px -10px rgba(193,74,36,.6)}
+.btn:active{transform:translateY(-1px) scale(.97)}
+.btn svg{transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.btn:hover svg{transform:translateX(6px)}
+
+.hero{flex-direction:column;justify-content:center;align-items:flex-start}
+.hero .scroll-hint{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:rgba(24,34,46,.45)}
+.scroll-hint .line{width:1px;height:44px;background:linear-gradient(var(--amber),transparent);animation:drip 2s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.hero-title-ov{position:relative}
+.hero-title-ov .ghost{position:absolute;top:-0.16em;left:-0.06em;font-size:1em;color:transparent;-webkit-text-stroke:1px rgba(127,173,212,.5);pointer-events:none;user-select:none}
+
+/* interactive notes */
+.notes{margin-top:34px;border-top:1px solid rgba(24,34,46,.12)}
+.note{position:relative;display:flex;justify-content:space-between;align-items:baseline;padding:18px 6px;border-bottom:1px solid rgba(24,34,46,.12);
+  transition:padding-left .4s cubic-bezier(.22,1,.36,1),background .4s;overflow:hidden}
+.note:hover,.note.active{padding-left:18px;background:linear-gradient(90deg,rgba(174,205,232,.18),transparent)}
+.note b{font-family:var(--serif);font-weight:400;font-size:21px;transition:color .4s}
+.note:hover b,.note.active b{color:var(--amber)}
+.note span{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(24,34,46,.5)}
+.note .ripple{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(224,106,58,.35),transparent 70%);transform:translate(-50%,-50%) scale(0);pointer-events:none;animation:rip .9s ease-out forwards}
+@keyframes rip{to{transform:translate(-50%,-50%) scale(1);opacity:0}}
+.note .hint{position:absolute;left:18px;bottom:2px;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--amber);opacity:0;transition:opacity .4s}
+.note:hover .hint{opacity:.8}
+
+.quote{justify-content:center;text-align:center}
+.quote p{font-family:var(--serif);font-style:italic;font-size:clamp(26px,4vw,48px);line-height:1.3;max-width:22ch}
+.quote small{display:block;margin-top:26px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--amber)}
+
+.finale{flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.finale .copy{padding:56px 64px;border-radius:200px;background:radial-gradient(60% 60% at 50% 50%,rgba(245,247,249,.82),rgba(245,247,249,0));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.price{margin-top:20px;font-family:var(--serif);font-size:30px}
+.price sup{font-size:.5em;color:var(--amber)}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:150;display:flex;align-items:center;justify-content:center;visibility:hidden;opacity:0;transition:opacity .45s,visibility .45s}
+.modal.open{visibility:visible;opacity:1}
+.modal .backdrop{position:absolute;inset:0;background:rgba(245,247,249,.6);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.modal .card{position:relative;width:min(420px,88vw);padding:52px 44px;border-radius:28px;background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 40px 90px -30px rgba(24,34,46,.3);text-align:center;
+  transform:scale(.7) translateY(60px);transition:transform .6s cubic-bezier(.34,1.56,.5,1)}
+.modal.open .card{transform:scale(1) translateY(0)}
+.modal .seal{width:64px;height:64px;margin:0 auto 22px;border-radius:50%;background:linear-gradient(135deg,var(--amber-glow),var(--amber));display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px -8px rgba(193,74,36,.6)}
+.modal h3{font-family:var(--serif);font-weight:400;font-size:30px;margin-bottom:12px}
+.modal p{font-size:14px;line-height:1.7;color:rgba(24,34,46,.65)}
+.modal .close{margin-top:28px;background:none;border:none;font-family:var(--sans);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);cursor:none;border-bottom:1px solid var(--amber);padding-bottom:3px}
+
+footer{position:relative;z-index:10;display:flex;justify-content:space-between;padding:26px clamp(20px,5vw,64px);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:rgba(24,34,46,.45)}
+.rail{position:fixed;right:clamp(14px,3vw,36px);top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:14px}
+.rail i{width:6px;height:6px;border-radius:50%;background:rgba(24,34,46,.18);transition:background .4s,transform .4s}
+.rail i.on{background:var(--amber);transform:scale(1.5)}
+@media(max-width:640px){.rail{display:none}}
+@media(max-width:820px){
+  section{align-items:flex-end;padding-bottom:10vh}
+  .quote,.finale{align-items:center;padding-bottom:0}
+  .copy{max-width:100%}
+  .copy{padding:26px 24px;border-radius:26px;background:radial-gradient(70% 70% at 50% 50%,rgba(245,247,249,.78),rgba(245,247,249,0));backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+}
+</style>
+</head>
+<body data-page-node-id="LwnFs6JUtokBqkeWvJfV0O">
+
+<div data-page-node-id="w8GOL1eO35mi7gzW4wnIC2" class="bg-blur" id="bgBlur"></div>
+<div data-page-node-id="dMsTN659esQf5wcYsJ8BE8" class="blobs-wrap"><div data-page-node-id="rrz5Vq1Ir1ljLytq778H2Z" class="blob b1"></div><div data-page-node-id="gp0idjPoiYgpaPppBjm2I3" class="blob b2"></div><div data-page-node-id="u626mVdaT0SGIe0fwAX0ny" class="blob b3"></div></div>
+<div data-page-node-id="yIXdGhtY8yN8OSwtXs39KJ" class="grain"></div>
+<div data-page-node-id="ob2TvbngJXuIJl4cvJc4La" class="cursor"></div><div data-page-node-id="ksitNzLpmFTE1yAsHkgxLI" class="cursor-dot"></div>
+
+<div data-page-node-id="195tWU4KDWjYniDxdskhNj" id="loader">
+  <div data-page-node-id="zUxvU4iExAd1833YEf8BJq" class="word"><!--pnid:YgZUNtcApGyUaRSgoKzR9X-->Céleste</div>
+  <div data-page-node-id="yXWFbNI8Bw0p8hm09v6VRa" class="bar"><i data-page-node-id="GzRdv45QV7XyQYdHrIw7gC" id="loadbar"></i></div>
+  <div data-page-node-id="Y9UTdvS7hxbt6sLKBhkHx9" class="pct" id="loadpct"><!--pnid:psI0Px4n5fUtusicKhRGBt-->00</div>
+</div>
+
+<canvas data-page-node-id="VeREamSUqI0XbdJ7qK6dE5" id="stage-bg"></canvas>
+<canvas data-page-node-id="oJYjuAE05NRKdfypC0RMgY" id="stage"></canvas>
+<div data-page-node-id="xncl75BYE5MLt0cYoJku3Y" class="vignette"></div>
+
+<nav data-page-node-id="RIgGhIqPyYv1Wtuxgi0SG2">
+  <div data-page-node-id="ISdpIFeqIVbur6CnhVMPDk" class="logo"><!--pnid:KXk3xf2XubsT1DUfDq7daI-->Céleste<em data-page-node-id="de7OUTBEWepsglYmQI0Ey8"><!--pnid:DGUunJTrQtZAtmDAhb9hnb-->.</em></div>
+  <div data-page-node-id="vxOca1ryqNV3bKFwvZRXQh" class="nav-links">
+    <a data-page-node-id="vwRNfCZC95rduetm9iQgGB" data-hover href="#sillage"><!--pnid:Zze3oPtgkKdb1zTuDwV1us-->Sillage</a>
+    <a data-page-node-id="pQdOEBwVFJLJCT8YZJpxVU" data-hover href="#notes"><!--pnid:YvKFTuY1h368ZTEArb5FDr-->Notes</a>
+    <a data-page-node-id="E2tKYmTMYfVBkMRrT9N2Vi" data-hover href="#craft"><!--pnid:x1WtAAiSLgjLVQsWt7PKEK-->Craft</a>
+    <a data-page-node-id="KeZ6ik8EteJXYdhN2FRwz9" data-hover href="#acquire"><!--pnid:nxSUCxswkR1fRcVKfK60Z3-->Acquire</a>
+  </div>
+</nav>
+
+<div data-page-node-id="bHTvp0GnW0ZehiindS4jkv" class="rail" id="rail"></div>
+
+<main data-page-node-id="ykO71CJE5w7CvpMcjVKqEC">
+  <section data-page-node-id="knUn6EYdu867HpWBDFnzZh" class="hero" id="top">
+    <div data-page-node-id="e4ExbG0y9T8azfrZuznF6O" class="copy">
+      <div data-page-node-id="ghljMAjcFCThBxnXM3ecq5" class="kicker"><!--pnid:TYVROf3T0ktmpIUjrQ5TWT-->Nº 01 — Eau de Parfum</div>
+      <h1 data-page-node-id="M64Lj1416EoDJcBUUZZHI0" class="hero-title-ov"><span data-page-node-id="8JKn6P50VlqDocXu8VsspD" aria-hidden="true" class="ghost"><!--pnid:Oyq4bVmBDxzbkSJZxiXVQa-->Céleste</span><!--pnid:OUqg7TfldT5pj5xNasPz2K-->Céleste</h1>
+      <p data-page-node-id="h55i5FKf8TcKom1ZzZbIRx" class="lede"><!--pnid:jzj1vYyZmrwuYxZeT5vYcU-->A fragrance poured from open sky. Crisp green apple over warm amber — the quiet hour when daylight first touches glass.</p>
+    </div>
+    <div data-page-node-id="XRCX3kl42zJ5rgRO7wlM4F" class="scroll-hint"><span data-page-node-id="rFArMs2SrIKedSGVI0X6EQ"><!--pnid:zxoUaUAjtl5H0xXfIibqOh-->Scroll</span><span data-page-node-id="gFHSdWPvRaKK2LuyjoGlpa" class="line"></span></div>
+  </section>
+
+  <section data-page-node-id="wMkv4U1dn82Ln8rtaoXqP2" data-side="right" id="sillage">
+    <div data-page-node-id="FAdbQ6V6sDbTgC2iQXOQUb" class="copy">
+      <div data-page-node-id="43jnvGPLyTHN7YizGG3qpn" class="kicker"><!--pnid:ZRq0QybSKOPMIHyh8ak5Nc-->The Sillage</div>
+      <h2 data-page-node-id="aqcvq0Nlvh4tZ1PuBYt45S"><!--pnid:5phhn3tNZlooElIG8TnuRF-->Orchard,<br data-page-node-id="wxd33grvI9gqYqtbHyD0vZ"><!--pnid:vTIXXDe1OZNHvdktgdaNQk-->held in <em data-page-node-id="NQnKdYZS3gPndEwEkNQUlM"><!--pnid:BpWjjn5UcHaUIrujOHfe2j-->glass</em></h2>
+      <p data-page-node-id="9L2zq783iPn8w0RCroc8qh" class="lede"><!--pnid:8DouGlH2DMGNgZ5zlHVLRZ-->Each flacon is mouth-blown and cut by hand. A green apple, split at dawn, rests upon the cap — freshness suspended above warmth.</p>
+    </div>
+  </section>
+
+  <section data-page-node-id="frFp3zwsOh3MTQBnNgvk0v" id="notes">
+    <div data-page-node-id="ns3VRoHpoMK47Atx8JvKg3" class="copy">
+      <div data-page-node-id="01ZtPxlHt6MaUWryBnWCj2" class="kicker"><!--pnid:bwnyKACMBZEiScpdPHIXxx-->Olfactory Pyramid — touch to explore</div>
+      <h2 data-page-node-id="M3QhAda6OKJkJVAwrM3bZD"><!--pnid:n31Yw7ykby5vsHVZpjaKJX-->Notes of<br data-page-node-id="mGBdiMr4zdDv7rBpEDU7Sq"><!--pnid:lVog4c4kVKL2GirNojD9lF-->the <em data-page-node-id="mpkNVQzDkeFGkDLXLtVG1V"><!--pnid:yZrnLKfdwZ7wKy2qMlafSf-->ascending</em><!--pnid:naBf400m09zQG96AdHGrWb--> hour</h2>
+      <div data-page-node-id="Gy3GB2ZRC9gZTZ5kSTzs6E" class="notes">
+        <div data-page-node-id="hkghEJP5HGCtbdjPrMXC3F" class="note" data-hover data-note="top"><b data-page-node-id="EEtVeaRxCRQvMOrWSn22GB"><!--pnid:qLapftUbKaLH9WXPWp7tq1-->Crisp Green Apple &amp; Cold Air</b><span data-page-node-id="jMPSKKeXPtxuIGVj2Zljoi"><!--pnid:t63QOZPvu825tGL66EexHH-->Top</span><span data-page-node-id="5hgGoo4ejNFBIn5Us7eMcS" class="hint"><!--pnid:oqJG17n4kIP6OKoKDvClIq-->hover — the bottle leans in</span></div>
+        <div data-page-node-id="HB2r8aFiVJNS1qjaE5Q9YA" class="note" data-hover data-note="heart"><b data-page-node-id="kRwhhPq10mGAKsY6QBivJG"><!--pnid:2QYPUiYjTvyMBlsRzTNCNQ-->White Tea &amp; Cloud Musk</b><span data-page-node-id="qdidjqdkBjRTrvtWbVrxIk"><!--pnid:1yBW9xNFJeZGw4SycgDxok-->Heart</span><span data-page-node-id="83aXxEwYsIAYlp2arPfcjO" class="hint"><!--pnid:k60S1ODGjy3GARgUtJI0fZ-->hover — light turns softer</span></div>
+        <div data-page-node-id="Bp1vfVW6ypAT9aQD7M9WCL" class="note" data-hover data-note="base"><b data-page-node-id="qTHkj4jRViHdX154imq7mi"><!--pnid:Ke4WYEnWdhlDFjwL10O5ml-->Amber Resin &amp; Warm Skin</b><span data-page-node-id="HjF9nJPkl4DL93e4OmEsgV"><!--pnid:3JISgTXjwblJKUtgIBAJin-->Base</span><span data-page-node-id="XE9hCDUB25PTBvNZcpgDV8" class="hint"><!--pnid:GsQbE9nIegn4MUwLoqMJnI-->hover — warmth gathers</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section data-page-node-id="H3EE8ea26bHwyqVk03RWGe" class="quote" id="craft">
+    <div data-page-node-id="MRlhDCu8Swb5Dmkj44IVCv" class="copy">
+      <p data-page-node-id="0BoHjm4h8FTolnwAsvx457"><!--pnid:lfTyU9FGgnBtSmZRGxbzja-->“Warmth is not added. It is remembered.”</p>
+      <small data-page-node-id="cicqMQnCUYHLfOj8Ot6Jcl"><!--pnid:xO0f25T0oucBdP1b4Rdbl7-->— Maison Céleste, Atelier Grasse</small>
+    </div>
+  </section>
+
+  <section data-page-node-id="moqCTMsQE6jM63gvB0KUXB" class="finale" id="acquire">
+    <div data-page-node-id="7OM0EwoVxk8UnWqg8CIKQI" class="copy" style="max-width:680px; text-align:center">
+      <div data-page-node-id="IfKGA5olGNWUS8yjnWESvN" class="kicker" style="justify-content:center"><!--pnid:hDgaVHGH4MDERuXN7HFXvZ-->Limited Atelier Edition</div>
+      <h2 data-page-node-id="0NzePJ72NRVeMkCmNLqCic"><!--pnid:uxMvsq15wezD2N8ZABw7G4-->Wear<br data-page-node-id="PcQvxopkLKXsKv2oKhP6NJ"><!--pnid:qmkxCDZyr90Nh4Rll6QSW1-->the <em data-page-node-id="PYpDVs57eF41uL75ykZ5Re"><!--pnid:dF03dGExP19O8YKao6Bsp1-->sky</em></h2>
+      <div data-page-node-id="1XQvtP1fiKSl1CDrsvR6eZ" class="price"><!--pnid:xzvsRnxNTINa7j1VKWNiWH-->240<sup data-page-node-id="v4PHHGu7FXvOUMwHGL1eqS"><!--pnid:hQ68g0xBm5nQPneiXO7BJo--> EUR</sup></div>
+      <button data-page-node-id="zCYkw7Pe6zYtaxK6T0sNuC" class="btn" data-hover id="reserve"><!--pnid:lyxa5wXSW5KuDNcFX79qMV-->Reserve Yours
+        <svg data-page-node-id="tLwQU25fAoB0V5qOV5JEGJ" fill="none" height="10" viewBox="0 0 16 10" width="16"><path data-page-node-id="x8y2rdHzn5e8aB4XyP53nb" d="M0 5h14M10 1l4 4-4 4" stroke="currentColor"/></svg>
+      </button>
+    </div>
+  </section>
+</main>
+
+<div data-page-node-id="EyNhcDmC9wsPHnR862NXpp" class="modal" id="modal">
+  <div data-page-node-id="usEqPvNLPtEi9j4oj5DLmp" class="backdrop" id="modal-backdrop"></div>
+  <div data-page-node-id="QKEltMt1RFlQyNlmByZ4Jz" class="card">
+    <div data-page-node-id="ENMCTGp7jNscGPrrGqn5aX" class="seal"><svg data-page-node-id="zn11xdNd9n2K90EOC6Y6yv" fill="none" height="26" viewBox="0 0 24 24" width="26"><path data-page-node-id="buE3QEgdXlqMZbIYiQYd4i" d="M4 12.5l5 5L20 6.5" stroke="#fff" stroke-linecap="round" stroke-width="2"/></svg></div>
+    <h3 data-page-node-id="J8LbG29rlGpZEAVTZgC9y5"><!--pnid:35Ev3t0sFzt3jykkC2Hja3-->Reserved for you</h3>
+    <p data-page-node-id="K2HBHi7Djw8bLhHgQeRzou"><!--pnid:e015ltIqmHW3d5rK1fWaHg-->Nº 01 Céleste — 100ml Eau de Parfum.<br data-page-node-id="mia0f9FzzoZDsFI0My5AoW"><!--pnid:gl0UQUjvRkc0UbSMu1a3sD-->Our atelier will write to you within one daybreak.<br data-page-node-id="MCRHsX1H7oq0qrNY58cuMM"><em data-page-node-id="nue2XMm2SIWczCW28lIP09" style="color:var(--amber)"><!--pnid:c0Ew9MEKvORd4beC3OF3yC-->Edition of 500, numbered by hand.</em></p>
+    <button data-page-node-id="M38HCikXdfR1LD17mgRw7N" class="close" data-hover id="modal-close"><!--pnid:Dje2G8npErHFDXkKllu87n-->Return to the sky</button>
+  </div>
+</div>
+
+<footer data-page-node-id="lTdlqeyq0y70dizEP8z5DV">
+  <span data-page-node-id="UUgEFTffBFvlWCvVnvYxgK"><!--pnid:hMWpd04XTIhkM9yviS5113-->© MMXXVI Maison Céleste</span>
+  <span data-page-node-id="sPC6AqTuaIUNvzHmxYlkeU"><!--pnid:VgE7OpAGhazdZiTUxJfIXv-->Grasse — Paris</span>
+</footer>
+
+<script data-page-node-id="mviAdYGZd64k6yhx75P9jY" src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script data-page-node-id="Xc6suEMwjbTwu9nPA9HWQc" src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script data-page-node-id="oJgLZjmwXQ0671jOQnwGJk" data-pnid-children="w9YsDEKOKTnWr5mkNcKgg6" type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}
+</script>
+<script data-page-node-id="D4xK5gOluLsLZrsAGS9GeV" data-pnid-children="uC8JT1Uv0IXScYUw061wqX" type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+/* ============ RENDERER / SCENE ============ */
+const bgCanvas = document.getElementById('stage-bg');
+const canvas = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true, powerPreference:'high-performance' });
+const rendererBg = new THREE.WebGLRenderer({ canvas: bgCanvas, antialias:true, alpha:true, powerPreference:'high-performance' });
+const pixCap = () => Math.min(devicePixelRatio, innerWidth < 820 ? 1.5 : 2);
+for (const r of [renderer, rendererBg]) {
+  r.setPixelRatio(pixCap());
+  r.setSize(innerWidth, innerHeight);
+  r.toneMapping = THREE.ACESFilmicToneMapping;
+  r.toneMappingExposure = 1.05;
+}
+
+const scene = new THREE.Scene();          // foreground: the bottle
+const sceneBg = new THREE.Scene();        // background: apples resting on the sand
+const envTex = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), .04).texture;
+scene.environment = envTex;
+sceneBg.environment = envTex;
+const camera = new THREE.PerspectiveCamera(34, innerWidth/innerHeight, .1, 50);
+camera.position.set(0, .4, 6.4);
+
+/* ============ LIGHTS ============ */
+const hemi = new THREE.HemisphereLight(0xdcebf7, 0xf5f0ea, 1.1);
+const keyCool = new THREE.DirectionalLight(0xbfd9f2, 2.2);  keyCool.position.set(-3, 4, 3);
+const keyWarm = new THREE.DirectionalLight(0xffa070, 0);    keyWarm.position.set(3.5, 1.2, 2.5);
+const rim     = new THREE.DirectionalLight(0xffffff, 1.4);  rim.position.set(0, 2, -4);
+scene.add(hemi, keyCool, keyWarm, rim);
+// twin lights for the background scene so both worlds share the same mood
+const hemiB = hemi.clone(), keyCoolB = keyCool.clone(), keyWarmB = keyWarm.clone(), rimB = rim.clone();
+sceneBg.add(hemiB, keyCoolB, keyWarmB, rimB);
+
+/* ============ RIGS ============ */
+const rig = new THREE.Group();          // scroll choreography
+const floater = new THREE.Group();      // idle float + cursor tilt
+rig.add(floater); scene.add(rig);
+const bottle = { group: new THREE.Group(), capTopY: 1.55, bottomY: -1.55 };
+const appleRig = new THREE.Group();     // lives in the background world — blurs & drifts on scroll
+floater.add(bottle.group); sceneBg.add(appleRig);
+
+/* ============ PARTICLE DUST POOL ============ */
+const MAXP = 260;
+const pGeo = new THREE.BufferGeometry();
+const pPos = new Float32Array(MAXP * 3);
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+const pMat = new THREE.PointsMaterial({ size:.045, color:0xe06a3a, transparent:true, opacity:.9, depthWrite:false, blending:THREE.AdditiveBlending });
+const points = new THREE.Points(pGeo, pMat); points.frustumCulled = false; scene.add(points);
+const pVel = new Float32Array(MAXP * 3), pLife = new Float32Array(MAXP);
+for (let i = 0; i < MAXP; i++) pPos[i*3+1] = -999;
+let pCursor = 0;
+function burst(worldPos, n = 46, spread = .5, up = .9) {
+  for (let k = 0; k < n; k++) {
+    const i = pCursor = (pCursor + 1) % MAXP;
+    pPos[i*3]   = worldPos.x + (Math.random()-.5)*.3;
+    pPos[i*3+1] = worldPos.y + (Math.random()-.5)*.3;
+    pPos[i*3+2] = worldPos.z + (Math.random()-.5)*.3;
+    const a = Math.random()*Math.PI*2, r = Math.random()*spread;
+    pVel[i*3] = Math.cos(a)*r; pVel[i*3+1] = Math.random()*up; pVel[i*3+2] = Math.sin(a)*r;
+    pLife[i] = 1;
+  }
+}
+function tickParticles(dt) {
+  for (let i = 0; i < MAXP; i++) {
+    if (pLife[i] <= 0) continue;
+    pLife[i] -= dt * .8;
+    pPos[i*3]   += pVel[i*3] * dt;
+    pPos[i*3+1] += pVel[i*3+1] * dt;
+    pPos[i*3+2] += pVel[i*3+2] * dt;
+    pVel[i*3+1] -= dt * .6;
+    if (pLife[i] <= 0) pPos[i*3+1] = -999;
+  }
+  pGeo.attributes.position.needsUpdate = true;
+}
+
+/* ============ ISLAND SPLIT (merged apple mesh -> parts) ============ */
+function splitIslands(mesh) {
+  const geo = mesh.geometry, pos = geo.attributes.position, idx = geo.index;
+  const n = pos.count, parent = Array.from({ length:n }, (_, i) => i);
+  const find = a => { while (parent[a] !== a) { parent[a] = parent[parent[a]]; a = parent[a]; } return a; };
+  const union = (a, b) => { a = find(a); b = find(b); if (a !== b) parent[b] = a; };
+  const weld = new Map();
+  for (let i = 0; i < n; i++) {
+    const k = `${pos.getX(i).toFixed(4)},${pos.getY(i).toFixed(4)},${pos.getZ(i).toFixed(4)}`;
+    if (weld.has(k)) union(i, weld.get(k)); else weld.set(k, i);
+  }
+  for (let i = 0; i < idx.count; i += 3) { union(idx.getX(i), idx.getX(i+1)); union(idx.getX(i+1), idx.getX(i+2)); }
+  const buckets = new Map();
+  for (let t = 0; t < idx.count; t += 3) {
+    const r = find(idx.getX(t));
+    if (!buckets.has(r)) buckets.set(r, []);
+    buckets.get(r).push(idx.getX(t), idx.getX(t+1), idx.getX(t+2));
+  }
+  const parts = [];
+  const norm = geo.attributes.normal, uv = geo.attributes.uv;
+  for (const tris of buckets.values()) {
+    if (tris.length < 300) continue;                      // drop dust/debris
+    const remap = new Map(), p = [], nrm = [], u = [], out = [];
+    for (const vi of tris) {
+      if (!remap.has(vi)) {
+        remap.set(vi, remap.size);
+        p.push(pos.getX(vi), pos.getY(vi), pos.getZ(vi));
+        if (norm) nrm.push(norm.getX(vi), norm.getY(vi), norm.getZ(vi));
+        if (uv) u.push(uv.getX(vi), uv.getY(vi));
+      }
+      out.push(remap.get(vi));
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(p, 3));
+    if (nrm.length) g.setAttribute('normal', new THREE.Float32BufferAttribute(nrm, 3));
+    if (u.length) g.setAttribute('uv', new THREE.Float32BufferAttribute(u, 2));
+    g.setIndex(out);
+    const m = new THREE.Mesh(g, mesh.material);
+    g.computeBoundingBox();
+    parts.push(m);
+  }
+  // biggest -> [full, half, sliceA, sliceB]
+  parts.sort((a, b) => {
+    const va = g => { const s = new THREE.Vector3(); g.geometry.boundingBox.getSize(s); return s.x*s.y*s.z; };
+    return va(b) - va(a);
+  });
+  return parts;
+}
+
+/* ============ LOAD BOTH MODELS ============ */
+const loaderBar = document.getElementById('loadbar');
+const loaderPct = document.getElementById('loadpct');
+const progress = { bottle:[0,1], apple:[0,1] };
+function updateBar() {
+  const l = progress.bottle[0] + progress.apple[0], t = progress.bottle[1] + progress.apple[1];
+  const p = Math.min(99, Math.round(l / t * 100));
+  loaderBar.style.width = p + '%';
+  loaderPct.textContent = String(p).padStart(2, '0');
+}
+const gl = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+let bottleReady = false, appleReady = false, introPlayed = false;
+// reveal the page the moment the hero bottle is ready — apples drop in whenever they arrive
+const maybeIntro = () => {
+  if (!bottleReady || introPlayed) return;
+  introPlayed = true;
+  document.getElementById('loader').classList.add('done');
+  if (appleReady) dropApples();
+};
+
+gl.load('model-web.glb', g => {
+  const m = g.scene;
+  const box = new THREE.Box3().setFromObject(m);
+  const s = 3.1 / box.getSize(new THREE.Vector3()).y;
+  m.scale.setScalar(s);
+  box.setFromObject(m);
+  m.position.sub(box.getCenter(new THREE.Vector3()));
+  box.setFromObject(m);   // recompute in final centered pose
+  m.traverse(o => { if (o.isMesh && o.material) { o.material.envMapIntensity = 1.15; if (o.material.transmission) o.material.roughness = Math.min(o.material.roughness, .12); } });
+  bottle.capTopY = box.max.y; bottle.bottomY = box.min.y;
+  bottle.group.add(m);
+  bottleReady = true;
+  progress.bottle = [1, 1]; updateBar(); maybeIntro();
+}, e => { if (e.total) { progress.bottle = [e.loaded, e.total]; updateBar(); } });
+
+const appleParts = {};   // full, half, sliceA, sliceB
+gl.load('apple-web.glb', g => {
+  let big = null;
+  g.scene.traverse(o => { if (o.isMesh && (!big || o.geometry.attributes.position.count > big.geometry.attributes.position.count)) big = o; });
+  const parts = splitIslands(big);
+  // normalize: full apple -> 1.15 tall
+  const fs = new THREE.Vector3(); parts[0].geometry.computeBoundingBox();
+  parts[0].geometry.boundingBox.getSize(fs);
+  const sc = 1.15 / fs.y;
+  const names = ['full', 'half', 'sliceA', 'sliceB'];
+  parts.slice(0, 4).forEach((mesh, i) => {
+    mesh.scale.setScalar(sc);
+    mesh.geometry.computeBoundingBox();
+    const c = mesh.geometry.boundingBox.getCenter(new THREE.Vector3()).multiplyScalar(sc);
+    mesh.position.sub(c);                    // center each part at own origin
+    const grp = new THREE.Group();           // pivot group for animation
+    mesh.material = mesh.material.clone();   // per-part material for defocus fade
+    mesh.material.transparent = true;
+    grp.add(mesh);
+    grp.userData.halfH = (mesh.geometry.boundingBox.max.y - mesh.geometry.boundingBox.min.y) * sc / 2;
+    appleRig.add(grp);
+    appleParts[names[i]] = grp;
+  });
+  appleReady = true;
+  progress.apple = [1, 1]; updateBar();
+  if (introPlayed) dropApples(); else maybeIntro();
+}, e => { if (e.total) { progress.apple = [e.loaded, e.total]; updateBar(); } });
+
+/* ============ RESTING POSES + INTRO CHOREOGRAPHY ============ */
+const REST = {
+  full:   { x:  1.95, z: .55, ry: .6,  rz: 0,    rx: 0 },
+  half:   { x:  0,    z: 0,   ry: -.4, rz: .12,  rx: 0 },
+  sliceA: { x: -2.05, z: .7,  ry: 2.4, rz: -.15, rx: -.35 },
+  sliceB: { x: -1.25, z: 1.1, ry: -1.8,rz: .2,   rx: .3 },
+};
+function restY(name) {
+  const g = appleParts[name], h = g.userData.halfH;
+  if (name === 'half') return bottle.capTopY + h * .55;     // nestle onto cap
+  return bottle.bottomY + h * .9;                           // ground level
+}
+function applyRest(name, instant) {
+  const g = appleParts[name], r = REST[name];
+  if (instant) {
+    g.position.set(r.x, restY(name), r.z);
+    g.rotation.set(r.rx, r.ry, r.rz);
+  }
+  g.userData.rest = { x:r.x, y:restY(name), z:r.z, rx:r.rx, ry:r.ry, rz:r.rz };
+}
+function dropApples() {
+  Object.keys(REST).forEach(n => applyRest(n, false));
+  const drop = (name, delay, fromY, ease, onLanded) => {
+    const g = appleParts[name], r = g.userData.rest;
+    g.position.set(r.x + (name==='sliceB' ? .6 : 0), fromY, r.z);
+    g.rotation.set(r.rx - 1.2, r.ry - 2, r.rz - .8);
+    gsap.to(g.position, { y: r.y, x: r.x, duration: 1.5, delay, ease, onComplete: onLanded });
+    gsap.to(g.rotation, { x: r.rx, y: r.ry, z: r.rz, duration: 1.7, delay, ease: 'power3.out' });
+  };
+  // slices tumble first, then the half-apple lands on the cap and stays glued to the bottle
+  drop('sliceA', .35, 5.5, 'bounce.out');
+  drop('sliceB', .55, 6.2, 'bounce.out');
+  drop('half',   .9,  6.8, 'bounce.out', () => bottle.group.attach(appleParts.half));
+  drop('full',   .15, 4.8, 'bounce.out');
+  // tiny settle pulse on bottle when half lands
+  gsap.fromTo(floater.rotation, {}, { duration:.1, delay: 2.2 });
+  burst(new THREE.Vector3(0, bottle.capTopY, 0).add(floater.position), 60, .8, 1.2);
+}
+
+/* ============ SCROLL CHOREOGRAPHY ============ */
+const KEYS = [
+  { ry: 0.0,  x:  0.0, y:  0.00, camY: .4,  warm: 0,   ary: 0,   ax: 0 },
+  { ry: .9,   x: -1.5, y: -.05, camY: .3,  warm: .2,  ary: .5,  ax: -.2 },
+  { ry: 2.1,  x:  1.5, y:  .05, camY: .2,  warm: .5,  ary: 1.2, ax: .25 },
+  { ry: 3.4,  x:  0.0, y: -.4,  camY: 1.1, warm: .75, ary: 2.0, ax: 0 },
+  { ry: 5.2,  x:  0.0, y:  .0,  camY: .4,  warm: 1,   ary: 2.8, ax: 0 },
+];
+let scrollT = 0, scrollS = 0;
+const rail = document.getElementById('rail');
+const sections = [...document.querySelectorAll('main section')];
+sections.forEach(() => rail.appendChild(document.createElement('i')));
+const dots = [...rail.children];
+function readScroll() {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  scrollT = max > 0 ? scrollY / max : 0;
+  const idx = Math.round(scrollT * (sections.length - 1));
+  dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+  // the moment scrolling starts, the half-apple tips off the cap and drops to the sand
+  // beside the bottle — it joins the background world and stays there for good
+  if (scrollT > .015 && introPlayed && appleParts.half && !appleParts.half.userData.fallen) {
+    const g = appleParts.half; g.userData.fallen = true;
+    appleRig.attach(g);                                  // reparent into the background scene (world pose preserved)
+    const h = g.userData.halfH;
+    const land = { x: 1.45, z: .95, y: bottle.bottomY + h * .9 };
+    gsap.to(g.position, { x: land.x, z: land.z, duration: .55, ease: 'power2.out' });   // swing clear of the bottle
+    gsap.to(g.position, { y: land.y, duration: 1.15, delay: .15, ease: 'bounce.out' }); // then drop & settle on the sand
+    gsap.to(g.rotation, { x: g.rotation.x - 2.1, y: g.rotation.y + 1.3, z: g.rotation.z + 2.4, duration: 1.25, ease: 'power2.out' });
+    gsap.delayedCall(1.3, () => burst(new THREE.Vector3(land.x, land.y, land.z), 30, .45, .7));
+  }
+}
+addEventListener('scroll', readScroll, { passive:true });
+readScroll();
+const ease = t => t * t * (3 - 2 * t);
+
+/* ============ CURSOR ============ */
+const cur = { x: innerWidth/2, y: innerHeight/2, rx: innerWidth/2, ry: innerHeight/2 };
+const cursorEl = document.querySelector('.cursor'), dotEl = document.querySelector('.cursor-dot');
+let tiltX = 0, tiltY = 0;
+addEventListener('pointermove', e => {
+  cur.x = e.clientX; cur.y = e.clientY;
+  tiltX = e.clientX / innerWidth - .5;
+  tiltY = e.clientY / innerHeight - .5;
+  dotEl.style.transform = `translate(${e.clientX}px,${e.clientY}px) translate(-50%,-50%)`;
+}, { passive:true });
+document.querySelectorAll('[data-hover]').forEach(el => {
+  el.addEventListener('pointerenter', () => cursorEl.classList.add('hovering'));
+  el.addEventListener('pointerleave', () => cursorEl.classList.remove('hovering'));
+});
+document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior:'smooth' });
+}));
+
+/* ============ INTERACTIVE NOTES ============ */
+const focus = { v: 0, warm: 0 };   // camera focal shift + extra warmth
+const NOTE_PRESETS = {
+  top:   { zoom: .55, warm: -.1, burstAt: 'apple',  color: 0xa8d47f },
+  heart: { zoom: .4,  warm: .15, burstAt: 'mid',    color: 0xbfd9f2 },
+  base:  { zoom: .5,  warm: .5,  burstAt: 'bottom', color: 0xe06a3a },
+};
+let activeNote = null;
+document.querySelectorAll('.note').forEach(el => {
+  const fire = (e, sticky) => {
+    const p = NOTE_PRESETS[el.dataset.note];
+    gsap.to(focus, { v: p.zoom, warm: p.warm, duration: 1.1, ease: 'power3.out' });
+    gsap.to(pMat.color, { r: (p.color>>16&255)/255, g: (p.color>>8&255)/255, b: (p.color&255)/255, duration: .6 });
+    const anchor = p.burstAt === 'apple' ? new THREE.Vector3(0, bottle.capTopY + .3, 0)
+      : p.burstAt === 'bottom' ? new THREE.Vector3(0, bottle.bottomY + .5, 0)
+      : new THREE.Vector3(0, 0, 0);
+    burst(anchor.applyMatrix4(floater.matrixWorld), 42, .7, 1);
+    // DOM ripple
+    const d = document.createElement('div');
+    d.className = 'ripple';
+    const rect = el.getBoundingClientRect();
+    const x = (e.clientX ?? rect.left + 40) - rect.left, y = (e.clientY ?? rect.top + 20) - rect.top;
+    d.style.cssText = `left:${x}px;top:${y}px;width:140px;height:140px`;
+    el.appendChild(d); setTimeout(() => d.remove(), 950);
+    if (sticky) {
+      activeNote?.classList.remove('active');
+      activeNote = activeNote === el ? null : el;
+      el.classList.toggle('active');
+      if (!activeNote) gsap.to(focus, { v: 0, warm: 0, duration: 1.2, ease: 'power3.out' });
+    }
+  };
+  el.addEventListener('pointerenter', e => fire(e, false));
+  el.addEventListener('click', e => fire(e, true));
+  el.addEventListener('pointerleave', () => {
+    if (activeNote !== el) gsap.to(focus, { v: activeNote ? NOTE_PRESETS[activeNote.dataset.note].zoom : 0, warm: activeNote ? NOTE_PRESETS[activeNote.dataset.note].warm : 0, duration: 1.2, ease: 'power3.out' });
+  });
+});
+
+/* ============ MODAL ============ */
+const modal = document.getElementById('modal');
+document.getElementById('reserve').addEventListener('click', () => {
+  modal.classList.add('open');
+  burst(new THREE.Vector3(0, .4, 0).applyMatrix4(floater.matrixWorld), 90, 1.4, 1.6);
+});
+['modal-backdrop', 'modal-close'].forEach(id => document.getElementById(id).addEventListener('click', () => modal.classList.remove('open')));
+addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open'); });
+
+/* ============ RESIZE ============ */
+function layout() {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  for (const r of [renderer, rendererBg]) {
+    r.setSize(innerWidth, innerHeight);
+    r.setPixelRatio(pixCap());
+  }
+}
+addEventListener('resize', layout);
+
+/* ============ MAIN LOOP ============ */
+const clock = new THREE.Clock();
+let sideScale = 1, lastBlur = -1;
+function tick() {
+  requestAnimationFrame(tick);
+  const t = clock.getElapsedTime(), dt = Math.min(clock.getDelta() || .016, .05);
+
+  scrollS += (scrollT - scrollS) * .065;
+  const f = scrollS * (KEYS.length - 1);
+  const i = Math.min(Math.floor(f), KEYS.length - 2);
+  const k = ease(f - i);
+  const A = KEYS[i], B = KEYS[i + 1];
+  const lerp = (a, b) => a + (b - a) * k;
+
+  const isMobile = innerWidth < 820;
+  sideScale += ((isMobile ? .45 : 1) - sideScale) * .08;
+  const xOff = lerp(A.x, B.x) * sideScale;
+
+  // responsive framing: smaller rig + farther camera on narrow screens
+  const rigS = isMobile ? .66 : 1;
+  rig.scale.setScalar(rig.scale.x + (rigS - rig.scale.x) * .07);
+
+  rig.rotation.y = lerp(A.ry, B.ry) + tiltX * .35;
+  rig.position.x = xOff + tiltX * .12;
+  rig.position.y = lerp(A.y, B.y) + (isMobile ? 1.15 : 0);
+
+  // camera: scroll path + note focal shift
+  const camZ = (isMobile ? 9.6 : 6.4) - focus.v * 1.6;
+  camera.position.z += (camZ - camera.position.z) * .07;
+  camera.position.y += (lerp(A.camY, B.camY) - focus.v * .35 - camera.position.y) * .08;
+  camera.lookAt(0, lerp(A.y, B.y) * .5 + (isMobile ? .3 : 0) + focus.v * .25, 0);
+
+  // idle float + tilt
+  floater.position.y = Math.sin(t * .8) * .06;
+  floater.rotation.z = Math.sin(t * .5) * .015 - tiltY * .08;
+  floater.rotation.x = tiltY * .18;
+
+  // apple defocus: the background world recedes and takes on the EXACT blur of the
+  // beach photo (same radius, same grade) so the apples read as lying on that sand
+  const blurBg = document.getElementById('bgBlur');
+  const defocus = Math.min(1, scrollS * 2.2);
+  blurBg.style.opacity = defocus;
+  appleRig.position.z = -scrollS * 1.6;
+  appleRig.scale.setScalar(1 - scrollS * .12);
+  const blurPx = defocus * 18;                            // .bg-blur uses blur(18px)
+  if (Math.abs(blurPx - lastBlur) > .05) {
+    lastBlur = blurPx;
+    bgCanvas.style.filter = blurPx < .1 ? 'none'
+      : `blur(${blurPx.toFixed(1)}px) saturate(${(1 + defocus * .15).toFixed(3)}) brightness(${(1 + defocus * .03).toFixed(3)})`;
+  }
+  // apples resting on the sand stay perfectly still — no bobbing, no drifting
+
+  // lighting: cool sky -> amber warmth (+ note focus warmth) — both worlds together
+  const w = Math.max(0, Math.min(1.2, lerp(A.warm, B.warm) + focus.warm));
+  keyCool.intensity = keyCoolB.intensity = 2.2 * (1 - w * .55);
+  keyWarm.intensity = keyWarmB.intensity = 3.0 * w;
+  hemi.intensity = hemiB.intensity = 1.1 - w * .3;
+
+  cur.rx += (cur.x - cur.rx) * .16; cur.ry += (cur.y - cur.ry) * .16;
+  cursorEl.style.transform = `translate(${cur.rx}px,${cur.ry}px) translate(-50%,-50%)`;
+
+  tickParticles(dt);
+  rendererBg.render(sceneBg, camera);
+  renderer.render(scene, camera);
+}
+tick();
+
+/* ============ ENTRANCE REVEALS ============ */
+gsap.registerPlugin(ScrollTrigger);
+gsap.utils.toArray('main section .copy').forEach(el => {
+  gsap.from(el.children, {
+    y: 44, opacity: 0, duration: 1.1, stagger: .09, ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 78%' }
+  });
+});
+</script>
+</body>
+</html>
